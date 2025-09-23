@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <!-- Login Modal and Header -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-qrcode"></i> QR Scanner Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select id="userRole" class="form-input" required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="operator">Operator</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="mainApp" class="hidden">
+        <div class="container">
+            <header class="header">
+                <div class="logo">
+                    <i class="fas fa-qrcode"></i>
+                    <h1>QR Scanner</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser">Welcome, User</span>
+                    <span id="userRoleBadge" class="user-role">Admin</span>
+                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>
+                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            <!-- QR Scanner Section Only -->
+            <section id="scanner-portal" class="portal-section active">
+                <div class="qr-section">
+                    <h2>QR Code Scanner</h2>
+                    <div class="qr-controls">
+                        <button class="btn btn-primary" onclick="startLiveScan()"><i class="fas fa-video"></i> Live Scan</button>
+                        <input type="file" id="qrImageInput" accept="image/*" style="display:none" onchange="handleQRImageUpload(event)">
+                        <button class="btn btn-secondary" onclick="document.getElementById('qrImageInput').click()"><i class="fas fa-upload"></i> Upload QR Image</button>
+                        <button class="btn btn-danger" onclick="stopLiveScan()"><i class="fas fa-stop"></i> Stop Scan</button>
+                    </div>
+                    <div id="qr-reader" style="width: 350px; margin: 20px auto;"></div>
+                    <div id="qr-canvas-container" style="display:none;">
+                        <canvas id="qr-canvas" width="350" height="350"></canvas>
+                    </div>
+                    <div class="qr-result">
+                        <h3>Scan Result</h3>
+                        <pre id="qrResultText">No QR code scanned yet.</pre>
+                        <div id="qrDetails" class="hidden">
+                            <h4>QR Details</h4>
+                            <table class="data-table">
+                                <tbody id="qrDetailsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

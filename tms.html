@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMS Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <!-- Login Modal and Header -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-train"></i> TMS Portal Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select id="userRole" class="form-input" required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="operator">Operator</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="mainApp" class="hidden">
+        <div class="container">
+            <header class="header">
+                <div class="logo">
+                    <i class="fas fa-train"></i>
+                    <h1>TMS Portal</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser">Welcome, User</span>
+                    <span id="userRoleBadge" class="user-role">Admin</span>
+                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>
+                    <a href="qr.html" class="btn btn-secondary">QR Scanner</a>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            <!-- TMS Portal Section Only -->
+            <section id="tms-portal" class="portal-section active">
+                <!-- TMS Portal Subnav -->
+                <nav class="subnav">
+                    <button class="subnav-btn active" onclick="showTMSSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+                    <button class="subnav-btn" onclick="showTMSSection('trackInventory')"><i class="fas fa-road"></i> Track Inventory</button>
+                    <button class="subnav-btn" onclick="showTMSSection('vendors')"><i class="fas fa-industry"></i> Vendors/Materials</button>
+                    <button class="subnav-btn" onclick="showTMSSection('users')"><i class="fas fa-users"></i> User Management</button>
+                </nav>
+                <!-- Dashboard Section -->
+                <div id="tms-dashboard" class="tms-section">
+                    <h2>TMS Dashboard</h2>
+                    <div class="dashboard-cards">
+                        <div class="card">
+                            <i class="fas fa-road"></i>
+                            <div class="card-info">
+                                <span class="card-title">Total Tracks</span>
+                                <span class="card-value" id="tmsTotalTracks">0</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-industry"></i>
+                            <div class="card-info">
+                                <span class="card-title">Vendors</span>
+                                <span class="card-value" id="tmsVendors">0</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-users"></i>
+                            <div class="card-info">
+                                <span class="card-title">Users</span>
+                                <span class="card-value" id="tmsUsers">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="tmsDashboardChart"></canvas>
+                    </div>
+                </div>
+                <!-- Track Inventory Section -->
+                <div id="tms-trackInventory" class="tms-section hidden">
+                    <h2>Track Inventory</h2>
+                    <div class="chart-container">
+                        <canvas id="tmsTrackChart"></canvas>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>ID</th><th>Section</th><th>Status</th><th>Length (km)</th></tr>
+                            </thead>
+                            <tbody id="tmsTrackTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Vendors/Materials Section -->
+                <div id="tms-vendors" class="tms-section hidden">
+                    <h2>Vendors & Materials</h2>
+                    <div class="chart-container">
+                        <canvas id="tmsVendorsChart"></canvas>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Vendor</th><th>Material</th><th>Quantity</th></tr>
+                            </thead>
+                            <tbody id="tmsVendorsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- User Management Section -->
+                <div id="tms-users" class="tms-section hidden">
+                    <h2>User Management</h2>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Name</th><th>Role</th><th>Email</th></tr>
+                            </thead>
+                            <tbody id="tmsUsersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
