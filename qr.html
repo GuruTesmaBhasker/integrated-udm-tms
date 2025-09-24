@@ -83,6 +83,36 @@
                     </div>
                 </div>
             </section>
+            <script>
+            let html5QrCodeInstance = null;
+            function startLiveScan() {
+                if (html5QrCodeInstance) return;
+                html5QrCodeInstance = new Html5Qrcode("qr-reader");
+                html5QrCodeInstance.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    qrCodeMessage => {
+                        document.getElementById('qrResultText').textContent = qrCodeMessage;
+                    },
+                    errorMessage => {
+                        // Optionally show scan errors
+                    }
+                ).catch(err => {
+                    document.getElementById('qrResultText').textContent = 'Camera access denied or not available.';
+                });
+            }
+            function stopLiveScan() {
+                if (html5QrCodeInstance) {
+                    html5QrCodeInstance.stop().then(() => {
+                        html5QrCodeInstance.clear();
+                        html5QrCodeInstance = null;
+                    });
+                }
+            }
+            </script>
         </div>
     </div>
 </body>
