@@ -336,4 +336,20 @@ function initializeReportChart() {
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginModal').classList.remove('hidden');
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('userRole').value;
+        if (username && password && role) {
+            currentUser = username;
+            userRole = role;
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUser').textContent = `Welcome, ${username}`;
+            document.getElementById('userRoleBadge').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            applyRolePermissions();
+            initializeCharts();
+        }
+    });
 });
