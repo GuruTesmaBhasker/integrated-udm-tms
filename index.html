@@ -1630,5 +1630,47 @@
     </div>
 
     <script src="main.js"></script>
+    <script>
+    let html5QrCodeInstance = null;
+    const startScanBtn = document.getElementById('start-scan');
+    const stopScanBtn = document.getElementById('stop-scan');
+    const scanText = document.getElementById('scan-text');
+    const qrReader = document.getElementById('qr-reader');
+
+    if (startScanBtn && stopScanBtn && qrReader) {
+        startScanBtn.addEventListener('click', function() {
+            startScanBtn.classList.add('hidden');
+            stopScanBtn.classList.remove('hidden');
+            scanText.textContent = 'Scanning...';
+            if (!html5QrCodeInstance) {
+                html5QrCodeInstance = new Html5Qrcode('qr-reader');
+            }
+            html5QrCodeInstance.start(
+                { facingMode: 'environment' },
+                { fps: 10, qrbox: 250 },
+                qrCodeMessage => {
+                    scanText.textContent = qrCodeMessage;
+                },
+                errorMessage => {
+                    // Optionally show scan errors
+                }
+            ).catch(err => {
+                scanText.textContent = 'Camera access denied or not available.';
+            });
+        });
+
+        stopScanBtn.addEventListener('click', function() {
+            stopScanBtn.classList.add('hidden');
+            startScanBtn.classList.remove('hidden');
+            if (html5QrCodeInstance) {
+                html5QrCodeInstance.stop().then(() => {
+                    html5QrCodeInstance.clear();
+                    html5QrCodeInstance = null;
+                    scanText.textContent = 'Scan stopped.';
+                });
+            }
+        });
+    }
+    </script>
 </body>
 </html>
