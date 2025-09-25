@@ -63,18 +63,40 @@
                 </div>
             </header>
 
-            <!-- Navigation Tabs -->
-            <nav class="nav-tabs">
-                <button class="nav-tab active" onclick="switchPortal('udm')">
-                    <i class="fas fa-cogs"></i> UDM Portal
-                </button>
-                <button class="nav-tab" onclick="switchPortal('tms')">
-                    <i class="fas fa-route"></i> TMS Portal
-                </button>
-                <button class="nav-tab" onclick="switchPortal('scanner')">
-                    <i class="fas fa-qrcode"></i> QR Scanner
-                </button>
-            </nav>
+            <!-- Portal Navigation -->
+            <div class="portal-welcome">
+                <h2>Welcome to Railway Management System</h2>
+                <p>Select a portal to access its features:</p>
+            </div>
+
+            <div class="portal-grid">
+                <div class="portal-card" onclick="window.location.href='udm.html'">
+                    <div class="portal-icon udm-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="portal-title">UDM Portal</div>
+                    <div class="portal-description">Unified Data Management for railway operations</div>
+                    <button class="btn btn-primary">Access UDM Portal</button>
+                </div>
+
+                <div class="portal-card" onclick="window.location.href='tms.html'">
+                    <div class="portal-icon tms-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="portal-title">TMS Portal</div>
+                    <div class="portal-description">Track Management System for railway infrastructure</div>
+                    <button class="btn btn-primary">Access TMS Portal</button>
+                </div>
+
+                <div class="portal-card" onclick="window.location.href='qr.html'">
+                    <div class="portal-icon scan-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="portal-title">QR Scanner</div>
+                    <div class="portal-description">QR code scanner for clippers and padders</div>
+                    <button class="btn btn-primary">Access QR Scanner</button>
+                </div>
+            </div>
 
             <!-- UDM Portal Section -->
             <section id="udm-portal" class="portal-section active">
