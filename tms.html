@@ -3,115 +3,928 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMS Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="TMS Portal - Track Management System for Railway Operations">
+    <title>TMS Portal - Track Management System</title>
+    
+    <!-- External Libraries -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="main.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-        <!-- Main Application -->
+    <!-- Main Application -->
     <div id="mainApp">
         <div class="container">
+            <!-- Header -->
             <header class="header">
                 <div class="logo">
-                    <i class="fas fa-train"></i>
+                    <i class="fas fa-route"></i>
                     <h1>TMS Portal</h1>
                 </div>
                 <div class="user-info">
                     <span id="currentUser">Welcome, User</span>
                     <span id="userRoleBadge" class="user-role">Admin</span>
-                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>
-                    <a href="qr.html" class="btn btn-secondary">QR Scanner</a>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="udm.html" class="btn btn-secondary">
+                        <i class="fas fa-cogs"></i> UDM Portal
+                    </a>
+                    <a href="qr.html" class="btn btn-secondary">
+                        <i class="fas fa-qrcode"></i> QR Scanner
+                    </a>
                     <button class="logout-btn" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </header>
-            <!-- TMS Portal Section Only -->
+
+            <!-- TMS Portal Section -->
             <section id="tms-portal" class="portal-section active">
-                <!-- TMS Portal Subnav -->
-                <nav class="subnav">
-                    <button class="subnav-btn active" onclick="showTMSSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
-                    <button class="subnav-btn" onclick="showTMSSection('trackInventory')"><i class="fas fa-road"></i> Track Inventory</button>
-                    <button class="subnav-btn" onclick="showTMSSection('vendors')"><i class="fas fa-industry"></i> Vendors/Materials</button>
-                    <button class="subnav-btn" onclick="showTMSSection('users')"><i class="fas fa-users"></i> User Management</button>
+                <!-- TMS Sub Navigation -->
+                <nav class="sub-nav-tabs">
+                    <button class="sub-nav-tab active" onclick="switchTMSSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchTMSSection('track-inventory')">
+                        <i class="fas fa-road"></i> Track Inventory
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchTMSSection('vendor-materials')">
+                        <i class="fas fa-truck"></i> Vendor & Materials
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchTMSSection('user-management')">
+                        <i class="fas fa-users-cog"></i> User Management
+                    </button>
                 </nav>
-                <!-- Dashboard Section -->
-                <div id="tms-dashboard" class="tms-section">
-                    <h2>TMS Dashboard</h2>
-                    <div class="dashboard-cards">
-                        <div class="card">
-                            <i class="fas fa-road"></i>
-                            <div class="card-info">
-                                <span class="card-title">Total Tracks</span>
-                                <span class="card-value" id="tmsTotalTracks">0</span>
+
+                <!-- TMS Dashboard Subsection -->
+                <div id="tms-dashboard" class="portal-subsection active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">89.7km</div>
+                            <div class="stat-label">Total Track Length</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">2,456</div>
+                            <div class="stat-label">Inventory Items</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Maintenance Zones</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">98.5%</div>
+                            <div class="stat-label">Track Availability</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon tms-icon">
+                                        <i class="fas fa-road"></i>
+                                    </div>
+                                    Track Conditions
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="trackChart"></canvas>
                             </div>
                         </div>
-                        <div class="card">
-                            <i class="fas fa-industry"></i>
-                            <div class="card-info">
-                                <span class="card-title">Vendors</span>
-                                <span class="card-value" id="tmsVendors">0</span>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-boxes"></i>
+                                    </div>
+                                    Inventory Status
+                                </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <i class="fas fa-users"></i>
-                            <div class="card-info">
-                                <span class="card-title">Users</span>
-                                <span class="card-value" id="tmsUsers">0</span>
+                            <div class="chart-container">
+                                <canvas id="inventoryChart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="tmsDashboardChart"></canvas>
-                    </div>
-                </div>
-                <!-- Track Inventory Section -->
-                <div id="tms-trackInventory" class="tms-section hidden">
-                    <h2>Track Inventory</h2>
-                    <div class="chart-container">
-                        <canvas id="tmsTrackChart"></canvas>
-                    </div>
-                    <div class="table-responsive">
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
+                                Track Management
+                            </div>
+                        </div>
                         <table class="data-table">
                             <thead>
-                                <tr><th>ID</th><th>Section</th><th>Status</th><th>Length (km)</th></tr>
+                                <tr>
+                                    <th>Track ID</th>
+                                    <th>Section</th>
+                                    <th>Length (km)</th>
+                                    <th>Condition</th>
+                                    <th>Last Inspection</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
-                            <tbody id="tmsTrackTableBody"></tbody>
+                            <tbody id="tmsTrackTable">
+                                <tr>
+                                    <td>TRK-001</td>
+                                    <td>Main Line A</td>
+                                    <td>15.3</td>
+                                    <td><span class="status-badge status-active">Good</span></td>
+                                    <td>2024-12-20</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TRK-002</td>
+                                    <td>Branch Line B</td>
+                                    <td>8.7</td>
+                                    <td><span class="status-badge status-maintenance">Fair</span></td>
+                                    <td>2024-12-18</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TRK-003</td>
+                                    <td>Yard Track C</td>
+                                    <td>3.2</td>
+                                    <td><span class="status-badge status-active">Good</span></td>
+                                    <td>2024-12-22</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- Vendors/Materials Section -->
-                <div id="tms-vendors" class="tms-section hidden">
-                    <h2>Vendors & Materials</h2>
-                    <div class="chart-container">
-                        <canvas id="tmsVendorsChart"></canvas>
+
+                <!-- TMS Track Inventory Subsection -->
+                <div id="tms-track-inventory" class="portal-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">1,847</div>
+                            <div class="stat-label">Track Components</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">756</div>
+                            <div class="stat-label">Rail Sections</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">234</div>
+                            <div class="stat-label">Switches</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">857</div>
+                            <div class="stat-label">Signals</div>
+                        </div>
                     </div>
-                    <div class="table-responsive">
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon tms-icon">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                    Add Track Component
+                                </div>
+                            </div>
+                            <form id="addTrackComponentForm">
+                                <div class="form-group">
+                                    <label class="form-label">Component Type</label>
+                                    <select class="form-input" required>
+                                        <option value="">Select Component Type</option>
+                                        <option value="rail-section">Rail Section</option>
+                                        <option value="switch-point">Switch Point</option>
+                                        <option value="signal-post">Signal Post</option>
+                                        <option value="crossing">Crossing</option>
+                                        <option value="buffer-stop">Buffer Stop</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Track Section</label>
+                                    <input type="text" class="form-input" placeholder="Enter track section" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Kilometer Post</label>
+                                    <input type="text" class="form-input" placeholder="e.g., KM 15.750" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Add Component
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-donut"></i>
+                                    </div>
+                                    Component Distribution
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="componentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-road"></i>
+                                </div>
+                                Track Inventory List
+                                <div style="margin-left: auto; display: flex; gap: 10px;">
+                                    <input type="text" placeholder="Search..." style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-file-export"></i> Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <table class="data-table">
                             <thead>
-                                <tr><th>Vendor</th><th>Material</th><th>Quantity</th></tr>
+                                <tr>
+                                    <th>Component ID</th>
+                                    <th>Type</th>
+                                    <th>Track Section</th>
+                                    <th>KM Post</th>
+                                    <th>Installation Date</th>
+                                    <th>Condition</th>
+                                    <th>Last Maintained</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
-                            <tbody id="tmsVendorsTableBody"></tbody>
+                            <tbody>
+                                <tr>
+                                    <td>TRK-INV-001</td>
+                                    <td>Rail Section</td>
+                                    <td>Main Line A</td>
+                                    <td>KM 12.500</td>
+                                    <td>2023-03-15</td>
+                                    <td><span class="status-badge status-active">Good</span></td>
+                                    <td>2024-11-20</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TRK-INV-002</td>
+                                    <td>Switch Point</td>
+                                    <td>Junction B-2</td>
+                                    <td>KM 18.750</td>
+                                    <td>2022-08-10</td>
+                                    <td><span class="status-badge status-maintenance">Fair</span></td>
+                                    <td>2024-10-15</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TRK-INV-003</td>
+                                    <td>Signal Post</td>
+                                    <td>Platform C-3</td>
+                                    <td>KM 25.100</td>
+                                    <td>2024-01-22</td>
+                                    <td><span class="status-badge status-active">Excellent</span></td>
+                                    <td>2024-12-01</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- User Management Section -->
-                <div id="tms-users" class="tms-section hidden">
-                    <h2>User Management</h2>
-                    <div class="table-responsive">
+
+                <!-- TMS Vendor & Materials Subsection -->
+                <div id="tms-vendor-materials" class="portal-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">47</div>
+                            <div class="stat-label">Active Vendors</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">₹2.4Cr</div>
+                            <div class="stat-label">Monthly Orders</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">128</div>
+                            <div class="stat-label">Material Types</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Pending Orders</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon tms-icon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                    Add New Vendor
+                                </div>
+                            </div>
+                            <form id="addVendorForm">
+                                <div class="form-group">
+                                    <label class="form-label">Company Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter company name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Person</label>
+                                    <input type="text" class="form-input" placeholder="Contact person name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" placeholder="vendor@company.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Material Category</label>
+                                    <select class="form-input" required>
+                                        <option value="">Select Category</option>
+                                        <option value="rails">Rails & Tracks</option>
+                                        <option value="signals">Signaling Equipment</option>
+                                        <option value="electrical">Electrical Components</option>
+                                        <option value="civil">Civil Materials</option>
+                                        <option value="safety">Safety Equipment</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Add Vendor
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                    Vendor Performance
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="vendorChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                Vendor Management
+                                <button class="btn btn-success" style="margin-left: auto;">
+                                    <i class="fas fa-plus"></i> Create Order
+                                </button>
+                            </div>
+                        </div>
                         <table class="data-table">
                             <thead>
-                                <tr><th>Name</th><th>Role</th><th>Email</th></tr>
+                                <tr>
+                                    <th>Vendor ID</th>
+                                    <th>Company Name</th>
+                                    <th>Contact Person</th>
+                                    <th>Material Category</th>
+                                    <th>Rating</th>
+                                    <th>Last Order</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
-                            <tbody id="tmsUsersTableBody"></tbody>
+                            <tbody>
+                                <tr>
+                                    <td>VEN-001</td>
+                                    <td>Steel Track Industries</td>
+                                    <td>Rajesh Kumar</td>
+                                    <td>Rails & Tracks</td>
+                                    <td>⭐⭐⭐⭐⭐</td>
+                                    <td>2024-12-15</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VEN-002</td>
+                                    <td>Signal Systems Ltd</td>
+                                    <td>Priya Sharma</td>
+                                    <td>Signaling Equipment</td>
+                                    <td>⭐⭐⭐⭐</td>
+                                    <td>2024-12-10</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VEN-003</td>
+                                    <td>Railway Electric Co</td>
+                                    <td>Amit Patel</td>
+                                    <td>Electrical Components</td>
+                                    <td>⭐⭐⭐</td>
+                                    <td>2024-11-28</td>
+                                    <td><span class="status-badge status-maintenance">Review</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                Material Orders
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Vendor</th>
+                                    <th>Material</th>
+                                    <th>Quantity</th>
+                                    <th>Order Date</th>
+                                    <th>Expected Delivery</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ORD-001</td>
+                                    <td>Steel Track Industries</td>
+                                    <td>Rail Sections 60kg/m</td>
+                                    <td>50 pieces</td>
+                                    <td>2024-12-15</td>
+                                    <td>2024-12-30</td>
+                                    <td><span class="status-badge status-maintenance">In Transit</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ORD-002</td>
+                                    <td>Signal Systems Ltd</td>
+                                    <td>LED Signal Lights</td>
+                                    <td>25 units</td>
+                                    <td>2024-12-10</td>
+                                    <td>2024-12-25</td>
+                                    <td><span class="status-badge status-active">Delivered</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TMS User Management Subsection -->
+                <div id="tms-user-management" class="portal-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">156</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">142</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Administrators</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">14</div>
+                            <div class="stat-label">Inactive Users</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon tms-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    Add New User
+                                </div>
+                            </div>
+                            <form id="addUserForm">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" placeholder="user@railway.gov.in" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Employee ID</label>
+                                    <input type="text" class="form-input" placeholder="EMP-12345" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role</label>
+                                    <select class="form-input" required>
+                                        <option value="">Select Role</option>
+                                        <option value="admin">Administrator</option>
+                                        <option value="operator">Operator</option>
+                                        <option value="viewer">Viewer</option>
+                                        <option value="maintenance">Maintenance Staff</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <select class="form-input" required>
+                                        <option value="">Select Department</option>
+                                        <option value="tms">TMS Department</option>
+                                        <option value="udm">UDM Department</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="operations">Operations</option>
+                                        <option value="engineering">Engineering</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Create User
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                    User Role Distribution
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="userRoleChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                User Management
+                                <div style="margin-left: auto; display: flex; gap: 10px;">
+                                    <select style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                                        <option>All Roles</option>
+                                        <option>Admin</option>
+                                        <option>Operator</option>
+                                        <option>Viewer</option>
+                                    </select>
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-file-export"></i> Export Users
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Last Login</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EMP-12345</td>
+                                    <td>John Doe</td>
+                                    <td>john.doe@railway.gov.in</td>
+                                    <td>Administrator</td>
+                                    <td>TMS Department</td>
+                                    <td>2024-12-23 10:30</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EMP-67890</td>
+                                    <td>Jane Smith</td>
+                                    <td>jane.smith@railway.gov.in</td>
+                                    <td>Operator</td>
+                                    <td>Operations</td>
+                                    <td>2024-12-22 16:45</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EMP-11111</td>
+                                    <td>Michael Brown</td>
+                                    <td>michael.brown@railway.gov.in</td>
+                                    <td>Viewer</td>
+                                    <td>Maintenance</td>
+                                    <td>2024-12-20 09:15</td>
+                                    <td><span class="status-badge status-maintenance">Inactive</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon tms-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                Permission Management
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>View Data</th>
+                                    <th>Edit Data</th>
+                                    <th>Delete Data</th>
+                                    <th>Manage Users</th>
+                                    <th>Generate Reports</th>
+                                    <th>System Settings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Administrator</strong></td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Operator</strong></td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Viewer</strong></td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Maintenance</strong></td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                    <td>❌</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </section>
         </div>
     </div>
+
+    <script src="main.js"></script>
+    <script>
+        // TMS Portal JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTMSCharts();
+            setupTMSEventListeners();
+        });
+
+        function switchTMSSection(sectionName) {
+            // Hide all subsections
+            document.querySelectorAll('.portal-subsection').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all sub-nav tabs
+            document.querySelectorAll('.sub-nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected subsection
+            const targetSection = document.getElementById(`tms-${sectionName}`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            event.target.closest('.sub-nav-tab').classList.add('active');
+        }
+
+        function initializeTMSCharts() {
+            // Track Conditions Chart
+            if (document.getElementById('trackChart')) {
+                const trackCtx = document.getElementById('trackChart').getContext('2d');
+                new Chart(trackCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Good', 'Fair', 'Poor', 'Excellent'],
+                        datasets: [{
+                            data: [65, 20, 5, 10],
+                            backgroundColor: ['#4CAF50', '#FF9800', '#F44336', '#2196F3']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Inventory Status Chart
+            if (document.getElementById('inventoryChart')) {
+                const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+                new Chart(inventoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['In Stock', 'Low Stock', 'Out of Stock', 'On Order'],
+                        datasets: [{
+                            data: [1200, 300, 50, 150],
+                            backgroundColor: ['#4CAF50', '#FF9800', '#F44336', '#2196F3']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Component Distribution Chart
+            if (document.getElementById('componentChart')) {
+                const componentCtx = document.getElementById('componentChart').getContext('2d');
+                new Chart(componentCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Rail Sections', 'Switches', 'Signals', 'Crossings', 'Buffer Stops'],
+                        datasets: [{
+                            data: [756, 234, 857, 120, 80],
+                            backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Vendor Performance Chart
+            if (document.getElementById('vendorChart')) {
+                const vendorCtx = document.getElementById('vendorChart').getContext('2d');
+                new Chart(vendorCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Performance Score',
+                            data: [85, 88, 92, 89, 94, 91],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // User Role Distribution Chart
+            if (document.getElementById('userRoleChart')) {
+                const userRoleCtx = document.getElementById('userRoleChart').getContext('2d');
+                new Chart(userRoleCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Admin', 'Operator', 'Viewer', 'Maintenance'],
+                        datasets: [{
+                            data: [8, 45, 89, 14],
+                            backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function setupTMSEventListeners() {
+            // Add Track Component Form
+            const addTrackComponentForm = document.getElementById('addTrackComponentForm');
+            if (addTrackComponentForm) {
+                addTrackComponentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Track component added successfully!');
+                    this.reset();
+                });
+            }
+
+            // Add Vendor Form
+            const addVendorForm = document.getElementById('addVendorForm');
+            if (addVendorForm) {
+                addVendorForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Vendor added successfully!');
+                    this.reset();
+                });
+            }
+
+            // Add User Form
+            const addUserForm = document.getElementById('addUserForm');
+            if (addUserForm) {
+                addUserForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('User created successfully!');
+                    this.reset();
+                });
+            }
+        }
+    </script>
 </body>
 </html>
