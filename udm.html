@@ -1,864 +1,685 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UDM Portal - Railway Asset Management System">
+    <title>UDM Portal - Railway Management</title>
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<html lang="en"><html lang="en">
 
-<head><head>
-
-    <meta charset="UTF-8">    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="UDM Portal - Unified Data Management System">    <title>UDM Portal</title>
-
-    <title>UDM Portal - Railway Management System</title>    <link rel="stylesheet" href="style.css">
-
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- External Libraries -->    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">    <script src="main.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
-
-    <body>
-
-    <link rel="stylesheet" href="style.css">    <!-- Login Modal and Header -->
-
-</head>    <div id="loginModal" class="modal">
-
-<body>        <div class="modal-content">
-
-    <!-- Login Modal -->            <h2><i class="fas fa-train"></i> UDM Portal Login</h2>
-
-    <div id="loginModal" class="modal">            <form id="loginForm">
-
-        <div class="modal-content">                <div class="form-group">
-
-            <h2><i class="fas fa-cogs"></i> UDM Portal Login</h2>                    <label class="form-label">Username</label>
-
-            <form id="loginForm">                    <input type="text" id="username" class="form-input" required>
-
-                <div class="form-group">                </div>
-
-                    <label class="form-label">Username</label>                <div class="form-group">
-
-                    <input type="text" id="username" class="form-input" required>                    <label class="form-label">Password</label>
-
-                </div>                    <input type="password" id="password" class="form-input" required>
-
-                <div class="form-group">                </div>
-
-                    <label class="form-label">Password</label>                <div class="form-group">
-
-                    <input type="password" id="password" class="form-input" required>                    <label class="form-label">Role</label>
-
-                </div>                    <select id="userRole" class="form-input" required>
-
-                <div class="form-group">                        <option value="">Select Role</option>
-
-                    <label class="form-label">Role</label>                        <option value="admin">Administrator</option>
-
-                    <select id="userRole" class="form-input" required>                        <option value="operator">Operator</option>
-
-                        <option value="">Select Role</option>                        <option value="viewer">Viewer</option>
-
-                        <option value="admin">Administrator</option>                    </select>
-
-                        <option value="operator">Operator</option>                </div>
-
-                        <option value="viewer">Viewer</option>                <button type="submit" class="btn btn-primary" style="width: 100%;">
-
-                    </select>                    <i class="fas fa-sign-in-alt"></i> Login
-
-                </div>                </button>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%;">            </form>
-
-                    <i class="fas fa-sign-in-alt"></i> Login        </div>
-
-                </button>    </div>
-
-            </form>    <div id="mainApp" class="hidden">
-
-        </div>        <div class="container">
-
-    </div>            <header class="header">
-
+    <!-- Main Application -->
+    <div id="mainApp">
+        <div class="container">
+            <!-- Header -->
+            <header class="header">
                 <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <h1>UDM Portal</h1>
+                    <span style="font-size: 0.9rem; color: #666;">Asset Management System</span>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser">Welcome, User</span>
+                    <span id="userRoleBadge" class="user-role">Admin</span>
+                    <a href="index.html" class="btn btn-secondary">Home</a>
+                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>
+                    <a href="qr.html" class="btn btn-secondary">QR Scanner</a>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
 
-    <!-- Main Application -->                    <i class="fas fa-train"></i>
+            <!-- UDM Portal Section -->
+            <section id="udm-portal" class="portal-section active">
+                <!-- UDM Sub Navigation -->
+                <nav class="sub-nav-tabs">
+                    <button class="sub-nav-tab active" onclick="switchUDMSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchUDMSection('track-fitting')">
+                        <i class="fas fa-wrench"></i> Track Fitting
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchUDMSection('inventory')">
+                        <i class="fas fa-boxes"></i> Inventory Management
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchUDMSection('reports')">
+                        <i class="fas fa-file-alt"></i> Reports
+                    </button>
+                    <button class="sub-nav-tab" onclick="switchUDMSection('profile')">
+                        <i class="fas fa-user-circle"></i> User Profile
+                    </button>
+                </nav>
 
-    <div id="mainApp" class="hidden">                    <h1>UDM Portal</h1>
+                <!-- UDM Dashboard Subsection -->
+                <div id="udm-dashboard" class="portal-subsection active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">1,247</div>
+                            <div class="stat-label">Total Assets</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1,189</div>
+                            <div class="stat-label">Active Assets</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">42</div>
+                            <div class="stat-label">Under Maintenance</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">16</div>
+                            <div class="stat-label">Inactive</div>
+                        </div>
+                    </div>
 
-        <div class="container">                </div>
-
-            <!-- Header -->                <div class="user-info">
-
-            <header class="header">                    <span id="currentUser">Welcome, User</span>
-
-                <div class="logo">                    <span id="userRoleBadge" class="user-role">Admin</span>
-
-                    <i class="fas fa-cogs"></i>                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>
-
-                    <h1>UDM Portal</h1>                    <a href="qr.html" class="btn btn-secondary">QR Scanner</a>
-
-                    <span style="font-size: 0.9rem; color: #666;">Unified Data Management</span>                    <button class="logout-btn" onclick="logout()">
-
-                </div>                        <i class="fas fa-sign-out-alt"></i> Logout
-
-                <div class="user-info">                    </button>
-
-                    <span id="currentUser">Welcome, User</span>                </div>
-
-                    <span id="userRoleBadge" class="user-role">Admin</span>            </header>
-
-                    <a href="index.html" class="btn btn-secondary">Back to Portal</a>            <!-- UDM Portal Section Only -->
-
-                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>            <section id="udm-portal" class="portal-section active">
-
-                    <a href="qr.html" class="btn btn-secondary">QR Scanner</a>                <!-- UDM Portal Subnav -->
-
-                    <button class="logout-btn" onclick="logout()">                <nav class="subnav">
-
-                        <i class="fas fa-sign-out-alt"></i> Logout                    <button class="subnav-btn active" onclick="showUDMSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
-
-                    </button>                    <button class="subnav-btn" onclick="showUDMSection('trackFitting')"><i class="fas fa-tools"></i> Track Fitting</button>
-
-                </div>                    <button class="subnav-btn" onclick="showUDMSection('inventory')"><i class="fas fa-boxes"></i> Inventory</button>
-
-            </header>                    <button class="subnav-btn" onclick="showUDMSection('reports')"><i class="fas fa-chart-bar"></i> Reports</button>
-
-                    <button class="subnav-btn" onclick="showUDMSection('profile')"><i class="fas fa-user"></i> Profile</button>
-
-            <!-- UDM Sub Navigation -->                </nav>
-
-            <nav class="sub-nav-tabs">                <!-- Dashboard Section -->
-
-                <button class="sub-nav-tab active" onclick="switchUDMSection('dashboard')">                <div id="udm-dashboard" class="udm-section">
-
-                    <i class="fas fa-tachometer-alt"></i> Dashboard                    <h2>UDM Dashboard</h2>
-
-                </button>                    <div class="dashboard-cards">
-
-                <button class="sub-nav-tab" onclick="switchUDMSection('track-fitting')">                        <div class="card">
-
-                    <i class="fas fa-wrench"></i> Track Fitting                            <i class="fas fa-warehouse"></i>
-
-                </button>                            <div class="card-info">
-
-                <button class="sub-nav-tab" onclick="switchUDMSection('inventory')">                                <span class="card-title">Total Assets</span>
-
-                    <i class="fas fa-boxes"></i> Inventory Management                                <span class="card-value" id="udmTotalAssets">0</span>
-
-                </button>                            </div>
-
-                <button class="sub-nav-tab" onclick="switchUDMSection('reports')">                        </div>
-
-                    <i class="fas fa-file-alt"></i> Reports                        <div class="card">
-
-                </button>                            <i class="fas fa-cogs"></i>
-
-                <button class="sub-nav-tab" onclick="switchUDMSection('profile')">                            <div class="card-info">
-
-                    <i class="fas fa-user-circle"></i> User Profile                                <span class="card-title">Active Fittings</span>
-
-                </button>                                <span class="card-value" id="udmActiveFittings">0</span>
-
-            </nav>                            </div>
-
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon udm-icon">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                    Asset Overview
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="assetChart"></canvas>
+                            </div>
                         </div>
 
-            <!-- UDM Dashboard Subsection -->                        <div class="card">
-
-            <div id="udm-dashboard" class="portal-subsection active">                            <i class="fas fa-exclamation-triangle"></i>
-
-                <div class="stats-grid">                            <div class="card-info">
-
-                    <div class="stat-card">                                <span class="card-title">Issues</span>
-
-                        <div class="stat-number">1,247</div>                                <span class="card-value" id="udmIssues">0</span>
-
-                        <div class="stat-label">Total Assets</div>                            </div>
-
-                    </div>                        </div>
-
-                    <div class="stat-card">                    </div>
-
-                        <div class="stat-number">1,189</div>                    <div class="chart-container">
-
-                        <div class="stat-label">Active Assets</div>                        <canvas id="udmDashboardChart"></canvas>
-
-                    </div>                    </div>
-
-                    <div class="stat-card">                </div>
-
-                        <div class="stat-number">42</div>                <!-- Track Fitting Section -->
-
-                        <div class="stat-label">Under Maintenance</div>                <div id="udm-trackFitting" class="udm-section hidden">
-
-                    </div>                    <h2>Track Fitting</h2>
-
-                    <div class="stat-card">                    <div class="chart-container">
-
-                        <div class="stat-number">16</div>                        <canvas id="udmFittingChart"></canvas>
-
-                        <div class="stat-label">Inactive</div>                    </div>
-
-                    </div>                    <div class="table-responsive">
-
-                </div>                        <table class="data-table">
-
-                            <thead>
-
-                <div class="dashboard-grid">                                <tr><th>ID</th><th>Type</th><th>Status</th><th>Location</th></tr>
-
-                    <div class="dashboard-card">                            </thead>
-
-                        <div class="card-header">                            <tbody id="udmFittingTableBody"></tbody>
-
-                            <div class="card-title">                        </table>
-
-                                <div class="card-icon udm-icon">                    </div>
-
-                                    <i class="fas fa-database"></i>                </div>
-
-                                </div>                <!-- Inventory Section -->
-
-                                Asset Overview                <div id="udm-inventory" class="udm-section hidden">
-
-                            </div>                    <h2>Inventory</h2>
-
-                        </div>                    <div class="chart-container">
-
-                        <div class="chart-container">                        <canvas id="udmInventoryChart"></canvas>
-
-                            <canvas id="assetChart"></canvas>                    </div>
-
-                        </div>                    <div class="table-responsive">
-
-                    </div>                        <table class="data-table">
-
-                            <thead>
-
-                    <div class="dashboard-card">                                <tr><th>Item</th><th>Quantity</th><th>Status</th></tr>
-
-                        <div class="card-header">                            </thead>
-
-                            <div class="card-title">                            <tbody id="udmInventoryTableBody"></tbody>
-
-                                <div class="card-icon stats-icon">                        </table>
-
-                                    <i class="fas fa-chart-line"></i>                    </div>
-
-                                </div>                </div>
-
-                                Asset Performance                <!-- Reports Section -->
-
-                            </div>                <div id="udm-reports" class="udm-section hidden">
-
-                        </div>                    <h2>Reports & Analysis</h2>
-
-                        <div class="chart-container">                    <div class="chart-container">
-
-                            <canvas id="performanceChart"></canvas>                        <canvas id="udmReportsChart"></canvas>
-
-                        </div>                    </div>
-
-                    </div>                    <div class="table-responsive">
-
-                </div>                        <table class="data-table">
-
-                            <thead>
-
-                <div class="dashboard-card">                                <tr><th>Date</th><th>Event</th><th>Details</th></tr>
-
-                    <div class="card-header">                            </thead>
-
-                        <div class="card-title">                            <tbody id="udmReportsTableBody"></tbody>
-
-                            <div class="card-icon udm-icon">                        </table>
-
-                                <i class="fas fa-list"></i>                    </div>
-
-                            </div>                </div>
-
-                            Recent Asset Activities                <!-- Profile Section -->
-
-                        </div>                <div id="udm-profile" class="udm-section hidden">
-
-                    </div>                    <h2>User Profile</h2>
-
-                    <table class="data-table">                    <div class="profile-info">
-
-                        <thead>                        <p><strong>Name:</strong> <span id="udmProfileName"></span></p>
-
-                            <tr>                        <p><strong>Role:</strong> <span id="udmProfileRole"></span></p>
-
-                                <th>Asset ID</th>                        <p><strong>Email:</strong> <span id="udmProfileEmail"></span></p>
-
-                                <th>Asset Type</th>                    </div>
-
-                                <th>Location</th>                </div>
-
-                                <th>Status</th>            </section>
-
-                                <th>Last Updated</th>        </div>
-
-                                <th>Actions</th>    </div>
-
-                            </tr></body>
-
-                        </thead></html>
-                        <tbody id="udmAssetTable">
-                            <tr>
-                                <td>UDM-001</td>
-                                <td>Rail Track</td>
-                                <td>Section A-1</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td>2024-12-23 10:30</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>UDM-002</td>
-                                <td>Signal System</td>
-                                <td>Junction B-2</td>
-                                <td><span class="status-badge status-maintenance">Maintenance</span></td>
-                                <td>2024-12-23 09:15</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>UDM-003</td>
-                                <td>Switch Point</td>
-                                <td>Platform C-3</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td>2024-12-23 08:45</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- UDM Track Fitting Subsection -->
-            <div id="udm-track-fitting" class="portal-subsection">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">342</div>
-                        <div class="stat-label">Total Fittings</div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    Asset Performance
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number">298</div>
-                        <div class="stat-label">Installed</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">44</div>
-                        <div class="stat-label">In Stock</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">15</div>
-                        <div class="stat-label">Under Repair</div>
-                    </div>
-                </div>
 
-                <div class="dashboard-grid">
                     <div class="dashboard-card">
                         <div class="card-header">
                             <div class="card-title">
                                 <div class="card-icon udm-icon">
-                                    <i class="fas fa-plus-circle"></i>
+                                    <i class="fas fa-list"></i>
                                 </div>
-                                Add New Fitting
+                                Recent Asset Activities
                             </div>
                         </div>
-                        <form id="addFittingForm">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset ID</th>
+                                    <th>Asset Type</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="udmAssetTable">
+                                <tr>
+                                    <td>UDM-001</td>
+                                    <td>Rail Track</td>
+                                    <td>Section A-1</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>2024-12-23 10:30</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UDM-002</td>
+                                    <td>Signal System</td>
+                                    <td>Junction B-2</td>
+                                    <td><span class="status-badge status-maintenance">Maintenance</span></td>
+                                    <td>2024-12-23 09:15</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UDM-003</td>
+                                    <td>Switch Point</td>
+                                    <td>Platform C-3</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>2024-12-23 08:45</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- UDM Track Fitting Subsection -->
+                <div id="udm-track-fitting" class="portal-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">342</div>
+                            <div class="stat-label">Total Fittings</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">298</div>
+                            <div class="stat-label">Installed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">44</div>
+                            <div class="stat-label">In Stock</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Under Repair</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon udm-icon">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                    Add New Fitting
+                                </div>
+                            </div>
+                            <form id="addFittingForm">
+                                <div class="form-group">
+                                    <label class="form-label">Fitting Type</label>
+                                    <select class="form-input" required>
+                                        <option value="">Select Fitting Type</option>
+                                        <option value="rail-joint">Rail Joint</option>
+                                        <option value="fish-plate">Fish Plate</option>
+                                        <option value="rail-clip">Rail Clip</option>
+                                        <option value="sleeper-plate">Sleeper Plate</option>
+                                        <option value="bolt-nut">Bolt & Nut</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-input" placeholder="Track Section/Location" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" class="form-input" placeholder="Enter quantity" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Add Fitting
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                    Fitting Distribution
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="fittingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon udm-icon">
+                                    <i class="fas fa-wrench"></i>
+                                </div>
+                                Track Fittings Inventory
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fitting ID</th>
+                                    <th>Type</th>
+                                    <th>Location</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Installation Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FIT-001</td>
+                                    <td>Rail Joint</td>
+                                    <td>Section A-1</td>
+                                    <td>12</td>
+                                    <td><span class="status-badge status-active">Installed</span></td>
+                                    <td>2024-11-15</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FIT-002</td>
+                                    <td>Fish Plate</td>
+                                    <td>Junction B-2</td>
+                                    <td>8</td>
+                                    <td><span class="status-badge status-maintenance">Repair</span></td>
+                                    <td>2024-10-22</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FIT-003</td>
+                                    <td>Rail Clip</td>
+                                    <td>Platform C-3</td>
+                                    <td>24</td>
+                                    <td><span class="status-badge status-active">Installed</span></td>
+                                    <td>2024-12-01</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- UDM Inventory Management Subsection -->
+                <div id="udm-inventory" class="portal-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">5,432</div>
+                            <div class="stat-label">Total Items</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">4,987</div>
+                            <div class="stat-label">In Stock</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">245</div>
+                            <div class="stat-label">Low Stock</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">200</div>
+                            <div class="stat-label">Out of Stock</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon udm-icon">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    Search Inventory
+                                </div>
+                            </div>
                             <div class="form-group">
-                                <label class="form-label">Fitting Type</label>
-                                <select class="form-input" required>
-                                    <option value="">Select Fitting Type</option>
-                                    <option value="rail-joint">Rail Joint</option>
-                                    <option value="fish-plate">Fish Plate</option>
-                                    <option value="rail-clip">Rail Clip</option>
-                                    <option value="sleeper-plate">Sleeper Plate</option>
-                                    <option value="bolt-nut">Bolt & Nut</option>
+                                <input type="text" class="form-input" placeholder="Search by item name, code, or category..." id="inventorySearch">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-input" id="categoryFilter">
+                                    <option value="">All Categories</option>
+                                    <option value="rails">Rails</option>
+                                    <option value="sleepers">Sleepers</option>
+                                    <option value="fasteners">Fasteners</option>
+                                    <option value="signals">Signals</option>
+                                    <option value="switches">Switches</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                    Stock Levels
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="stockChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon udm-icon">
+                                    <i class="fas fa-warehouse"></i>
+                                </div>
+                                Inventory Items
+                                <button class="btn btn-success" style="margin-left: auto;">
+                                    <i class="fas fa-plus"></i> Add Item
+                                </button>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Current Stock</th>
+                                    <th>Min Level</th>
+                                    <th>Unit Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INV-001</td>
+                                    <td>Steel Rail 60kg/m</td>
+                                    <td>Rails</td>
+                                    <td>150</td>
+                                    <td>50</td>
+                                    <td>₹25,000</td>
+                                    <td><span class="status-badge status-active">In Stock</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INV-002</td>
+                                    <td>Concrete Sleeper</td>
+                                    <td>Sleepers</td>
+                                    <td>25</td>
+                                    <td>100</td>
+                                    <td>₹1,500</td>
+                                    <td><span class="status-badge status-maintenance">Low Stock</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INV-003</td>
+                                    <td>Rail Fastener</td>
+                                    <td>Fasteners</td>
+                                    <td>0</td>
+                                    <td>500</td>
+                                    <td>₹45</td>
+                                    <td><span class="status-badge status-inactive">Out of Stock</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- UDM Reports Subsection -->
+                <div id="udm-reports" class="portal-subsection">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon udm-icon">
+                                        <i class="fas fa-file-download"></i>
+                                    </div>
+                                    Generate Reports
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Report Type</label>
+                                <select class="form-input" id="reportType">
+                                    <option value="">Select Report Type</option>
+                                    <option value="asset-summary">Asset Summary Report</option>
+                                    <option value="maintenance-log">Maintenance Log Report</option>
+                                    <option value="inventory-status">Inventory Status Report</option>
+                                    <option value="track-fitting">Track Fitting Report</option>
+                                    <option value="performance-analysis">Performance Analysis</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Location</label>
-                                <input type="text" class="form-input" placeholder="Track Section/Location" required>
+                                <label class="form-label">Date Range</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="date" class="form-input" id="startDate">
+                                    <input type="date" class="form-input" id="endDate">
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Quantity</label>
-                                <input type="number" class="form-input" placeholder="Enter quantity" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Add Fitting
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon stats-icon">
-                                    <i class="fas fa-chart-pie"></i>
-                                </div>
-                                Fitting Distribution
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="fittingChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon udm-icon">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                            Track Fittings Inventory
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Fitting ID</th>
-                                <th>Type</th>
-                                <th>Location</th>
-                                <th>Quantity</th>
-                                <th>Status</th>
-                                <th>Installation Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>FIT-001</td>
-                                <td>Rail Joint</td>
-                                <td>Section A-1</td>
-                                <td>12</td>
-                                <td><span class="status-badge status-active">Installed</span></td>
-                                <td>2024-11-15</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>FIT-002</td>
-                                <td>Fish Plate</td>
-                                <td>Junction B-2</td>
-                                <td>8</td>
-                                <td><span class="status-badge status-maintenance">Repair</span></td>
-                                <td>2024-10-22</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>FIT-003</td>
-                                <td>Rail Clip</td>
-                                <td>Platform C-3</td>
-                                <td>24</td>
-                                <td><span class="status-badge status-active">Installed</span></td>
-                                <td>2024-12-01</td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- UDM Inventory Management Subsection -->
-            <div id="udm-inventory" class="portal-subsection">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">5,432</div>
-                        <div class="stat-label">Total Items</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">4,987</div>
-                        <div class="stat-label">In Stock</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">245</div>
-                        <div class="stat-label">Low Stock</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">200</div>
-                        <div class="stat-label">Out of Stock</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon udm-icon">
-                                    <i class="fas fa-search"></i>
-                                </div>
-                                Search Inventory
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-input" placeholder="Search by item name, code, or category..." id="inventorySearch">
-                        </div>
-                        <div class="form-group">
-                            <select class="form-input" id="categoryFilter">
-                                <option value="">All Categories</option>
-                                <option value="rails">Rails</option>
-                                <option value="sleepers">Sleepers</option>
-                                <option value="fasteners">Fasteners</option>
-                                <option value="signals">Signals</option>
-                                <option value="switches">Switches</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon stats-icon">
-                                    <i class="fas fa-chart-bar"></i>
-                                </div>
-                                Stock Levels
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="stockChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon udm-icon">
-                                <i class="fas fa-warehouse"></i>
-                            </div>
-                            Inventory Items
-                            <button class="btn btn-success" style="margin-left: auto;">
-                                <i class="fas fa-plus"></i> Add Item
-                            </button>
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Item Code</th>
-                                <th>Item Name</th>
-                                <th>Category</th>
-                                <th>Current Stock</th>
-                                <th>Min Level</th>
-                                <th>Unit Price</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>INV-001</td>
-                                <td>Steel Rail 60kg/m</td>
-                                <td>Rails</td>
-                                <td>150</td>
-                                <td>50</td>
-                                <td>₹25,000</td>
-                                <td><span class="status-badge status-active">In Stock</span></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>INV-002</td>
-                                <td>Concrete Sleeper</td>
-                                <td>Sleepers</td>
-                                <td>25</td>
-                                <td>100</td>
-                                <td>₹1,500</td>
-                                <td><span class="status-badge status-maintenance">Low Stock</span></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>INV-003</td>
-                                <td>Rail Fastener</td>
-                                <td>Fasteners</td>
-                                <td>0</td>
-                                <td>500</td>
-                                <td>₹45</td>
-                                <td><span class="status-badge status-inactive">Out of Stock</span></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- UDM Reports Subsection -->
-            <div id="udm-reports" class="portal-subsection">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon udm-icon">
-                                    <i class="fas fa-file-download"></i>
-                                </div>
-                                Generate Reports
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Report Type</label>
-                            <select class="form-input" id="reportType">
-                                <option value="">Select Report Type</option>
-                                <option value="asset-summary">Asset Summary Report</option>
-                                <option value="maintenance-log">Maintenance Log Report</option>
-                                <option value="inventory-status">Inventory Status Report</option>
-                                <option value="track-fitting">Track Fitting Report</option>
-                                <option value="performance-analysis">Performance Analysis</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Date Range</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="date" class="form-input" id="startDate">
-                                <input type="date" class="form-input" id="endDate">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Format</label>
-                            <select class="form-input" id="reportFormat">
-                                <option value="pdf">PDF</option>
-                                <option value="excel">Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-download"></i> Generate Report
-                        </button>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon stats-icon">
-                                    <i class="fas fa-chart-area"></i>
-                                </div>
-                                Report Analytics
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="reportChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon udm-icon">
-                                <i class="fas fa-history"></i>
-                            </div>
-                            Recent Reports
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Report Name</th>
-                                <th>Type</th>
-                                <th>Generated By</th>
-                                <th>Date</th>
-                                <th>Format</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Asset Summary Q4 2024</td>
-                                <td>Asset Summary</td>
-                                <td>Admin User</td>
-                                <td>2024-12-23</td>
-                                <td>PDF</td>
-                                <td><span class="status-badge status-active">Completed</span></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Maintenance Log Dec 2024</td>
-                                <td>Maintenance Log</td>
-                                <td>Operator User</td>
-                                <td>2024-12-22</td>
-                                <td>Excel</td>
-                                <td><span class="status-badge status-active">Completed</span></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Inventory Status Report</td>
-                                <td>Inventory Status</td>
-                                <td>Admin User</td>
-                                <td>2024-12-21</td>
-                                <td>CSV</td>
-                                <td><span class="status-badge status-maintenance">Processing</span></td>
-                                <td>
-                                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" disabled>
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- UDM User Profile Subsection -->
-            <div id="udm-profile" class="portal-subsection">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon udm-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                Profile Information
-                            </div>
-                        </div>
-                        <form id="profileForm">
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-input" value="John Doe" id="fullName">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Employee ID</label>
-                                <input type="text" class="form-input" value="EMP-12345" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-input" value="john.doe@railway.gov.in" id="email">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Department</label>
-                                <select class="form-input" id="department">
-                                    <option value="udm" selected>UDM Department</option>
-                                    <option value="tms">TMS Department</option>
-                                    <option value="maintenance">Maintenance</option>
-                                    <option value="operations">Operations</option>
+                                <label class="form-label">Format</label>
+                                <select class="form-input" id="reportFormat">
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Role</label>
-                                <input type="text" class="form-input" value="Administrator" readonly>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update Profile
+                            <button class="btn btn-primary">
+                                <i class="fas fa-download"></i> Generate Report
                             </button>
-                        </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-chart-area"></i>
+                                    </div>
+                                    Report Analytics
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="reportChart"></canvas>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="dashboard-card">
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="card-icon stats-icon">
-                                    <i class="fas fa-lock"></i>
+                                <div class="card-icon udm-icon">
+                                    <i class="fas fa-history"></i>
                                 </div>
-                                Change Password
+                                Recent Reports
                             </div>
                         </div>
-                        <form id="passwordForm">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Type</th>
+                                    <th>Generated By</th>
+                                    <th>Date</th>
+                                    <th>Format</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Asset Summary Q4 2024</td>
+                                    <td>Asset Summary</td>
+                                    <td>Admin User</td>
+                                    <td>2024-12-23</td>
+                                    <td>PDF</td>
+                                    <td><span class="status-badge status-active">Completed</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Maintenance Log Dec 2024</td>
+                                    <td>Maintenance Log</td>
+                                    <td>Operator User</td>
+                                    <td>2024-12-22</td>
+                                    <td>Excel</td>
+                                    <td><span class="status-badge status-active">Completed</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Inventory Status Report</td>
+                                    <td>Inventory Status</td>
+                                    <td>Admin User</td>
+                                    <td>2024-12-21</td>
+                                    <td>CSV</td>
+                                    <td><span class="status-badge status-maintenance">Processing</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" disabled>
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- UDM User Profile Subsection -->
+                <div id="udm-profile" class="portal-subsection">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon udm-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    Profile Information
+                                </div>
+                            </div>
+                            <form id="profileForm">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-input" value="John Doe" id="fullName">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Employee ID</label>
+                                    <input type="text" class="form-input" value="EMP-12345" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-input" value="john.doe@railway.gov.in" id="email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <select class="form-input" id="department">
+                                        <option value="udm" selected>UDM Department</option>
+                                        <option value="tms">TMS Department</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="operations">Operations</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role</label>
+                                    <input type="text" class="form-input" value="Administrator" readonly>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-icon stats-icon">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                    Change Password
+                                </div>
+                            </div>
+                            <form id="passwordForm">
+                                <div class="form-group">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-input" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-key"></i> Change Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon udm-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                Notification Preferences
+                            </div>
+                        </div>
+                        <form id="notificationForm">
                             <div class="form-group">
-                                <label class="form-label">Current Password</label>
-                                <input type="password" class="form-input" required>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked> Email notifications for asset alerts
+                                </label>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">New Password</label>
-                                <input type="password" class="form-input" required>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked> SMS alerts for critical issues
+                                </label>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Confirm New Password</label>
-                                <input type="password" class="form-input" required>
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox"> Weekly inventory reports
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked> Maintenance schedule reminders
+                                </label>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-key"></i> Change Password
+                                <i class="fas fa-save"></i> Save Preferences
                             </button>
                         </form>
                     </div>
                 </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon udm-icon">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            Notification Preferences
-                        </div>
-                    </div>
-                    <form id="notificationForm">
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" checked> Email notifications for asset alerts
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" checked> SMS alerts for critical issues
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox"> Weekly inventory reports
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" checked> Maintenance schedule reminders
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Preferences
-                        </button>
-                    </form>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
 

@@ -1,522 +1,92 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
 
-<html lang="en"><html lang="en">
-
-<head><head>
-
-    <meta charset="UTF-8">    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="QR Scanner - Railway Management System">    <title>QR Scanner</title>
-
-    <title>QR Scanner - Railway Management System</title>    <link rel="stylesheet" href="style.css">
-
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- External Libraries -->    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-
-    <script src="https://unpkg.com/html5-qrcode@2.3.4/html5-qrcode.min.js"></script>    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-
-        <script src="main.js"></script>
-
-    <link rel="stylesheet" href="style.css"></head>
-
-</head><body>
-
-<body>    <!-- Login Modal and Header -->
-
-    <!-- Login Modal -->    <div id="loginModal" class="modal">
-
-    <div id="loginModal" class="modal">        <div class="modal-content">
-
-        <div class="modal-content">            <h2><i class="fas fa-qrcode"></i> QR Scanner Login</h2>
-
-            <h2><i class="fas fa-qrcode"></i> QR Scanner Login</h2>            <form id="loginForm">
-
-            <form id="loginForm">                <div class="form-group">
-
-                <div class="form-group">                    <label class="form-label">Username</label>
-
-                    <label class="form-label">Username</label>                    <input type="text" id="username" class="form-input" required>
-
-                    <input type="text" id="username" class="form-input" required>                </div>
-
-                </div>                <div class="form-group">
-
-                <div class="form-group">                    <label class="form-label">Password</label>
-
-                    <label class="form-label">Password</label>                    <input type="password" id="password" class="form-input" required>
-
-                    <input type="password" id="password" class="form-input" required>                </div>
-
-                </div>                <div class="form-group">
-
-                <div class="form-group">                    <label class="form-label">Role</label>
-
-                    <label class="form-label">Role</label>                    <select id="userRole" class="form-input" required>
-
-                    <select id="userRole" class="form-input" required>                        <option value="">Select Role</option>
-
-                        <option value="">Select Role</option>                        <option value="admin">Administrator</option>
-
-                        <option value="admin">Administrator</option>                        <option value="operator">Operator</option>
-
-                        <option value="operator">Operator</option>                        <option value="viewer">Viewer</option>
-
-                        <option value="viewer">Viewer</option>                    </select>
-
-                    </select>                </div>
-
-                </div>                <button type="submit" class="btn btn-primary" style="width: 100%;">
-
-                <button type="submit" class="btn btn-primary" style="width: 100%;">                    <i class="fas fa-sign-in-alt"></i> Login
-
-                    <i class="fas fa-sign-in-alt"></i> Login                </button>
-
-                </button>            </form>
-
-            </form>        </div>
-
-        </div>    </div>
-
-    </div>    <div id="mainApp" class="hidden">
-
+    <div id="mainApp">
         <div class="container">
-
-    <!-- Main Application -->            <header class="header">
-
-    <div id="mainApp" class="hidden">                <div class="logo">
-
-        <div class="container">                    <i class="fas fa-qrcode"></i>
-
-            <!-- Header -->                    <h1>QR Scanner</h1>
-
-            <header class="header">                </div>
-
-                <div class="logo">                <div class="user-info">
-
-                    <i class="fas fa-qrcode"></i>                    <span id="currentUser">Welcome, User</span>
-
-                    <h1>QR Scanner</h1>                    <span id="userRoleBadge" class="user-role">Admin</span>
-
-                    <span style="font-size: 0.9rem; color: #666;">Railway Management System</span>                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>
-
-                </div>                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>
-
-                <div class="user-info">                    <button class="logout-btn" onclick="logout()">
-
-                    <span id="currentUser">Welcome, User</span>                        <i class="fas fa-sign-out-alt"></i> Logout
-
-                    <span id="userRoleBadge" class="user-role">Admin</span>                    </button>
-
-                    <a href="index.html" class="btn btn-secondary">Back to Portal</a>                </div>
-
-                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>            </header>
-
-                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>            <!-- QR Scanner Section Only -->
-
-                    <button class="logout-btn" onclick="logout()">            <section id="scanner-portal" class="portal-section active">
-
-                        <i class="fas fa-sign-out-alt"></i> Logout                <div class="qr-section">
-
-                    </button>                    <h2>QR Code Scanner</h2>
-
-                </div>                    <div class="qr-controls">
-
-            </header>                        <button class="btn btn-primary" onclick="startLiveScan()"><i class="fas fa-video"></i> Live Scan</button>
-
+            <header class="header">
+                <div class="logo">
+                    <i class="fas fa-qrcode"></i>
+                    <h1>QR Scanner</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser">Welcome, User</span>
+                    <span id="userRoleBadge" class="user-role">Admin</span>
+                    <a href="udm.html" class="btn btn-secondary">Go to UDM</a>
+                    <a href="tms.html" class="btn btn-secondary">Go to TMS</a>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            <!-- QR Scanner Section Only -->
+            <section id="scanner-portal" class="portal-section active">
+                <div class="qr-section">
+                    <h2>QR Code Scanner</h2>
+                    <div class="qr-controls">
+                        <button class="btn btn-primary" onclick="startLiveScan()"><i class="fas fa-video"></i> Live Scan</button>
                         <input type="file" id="qrImageInput" accept="image/*" style="display:none" onchange="handleQRImageUpload(event)">
-
-            <!-- QR Scanner Section -->                        <button class="btn btn-secondary" onclick="document.getElementById('qrImageInput').click()"><i class="fas fa-upload"></i> Upload QR Image</button>
-
-            <section id="scanner-portal" class="portal-section">                        <button class="btn btn-danger" onclick="stopLiveScan()"><i class="fas fa-stop"></i> Stop Scan</button>
-
-                <!-- QR Code Format Information -->                    </div>
-
-                <div class="qr-info-section">                    <div id="qr-reader" style="width: 350px; margin: 20px auto;"></div>
-
-                    <div class="qr-info-title">                    <div id="qr-canvas-container" style="display:none;">
-
-                        <i class="fas fa-info-circle"></i>                        <canvas id="qr-canvas" width="350" height="350"></canvas>
-
-                        QR Code Scanner for Clippers and Padders                    </div>
-
-                    </div>                    <div class="qr-result">
-
-                    <p>Scan QR codes attached to railway track clippers and padders to get comprehensive UDM and TMS details.</p>                        <h3>Scan Result</h3>
-
-                    <div class="qr-sample-format">                        <pre id="qrResultText">No QR code scanned yet.</pre>
-
-                        <strong>Supported Formats:</strong><br>                        <div id="qrDetails" class="hidden">
-
-                        • Simple: TYPE-ID-SECTION-KMPOST<br>                            <h4>QR Details</h4>
-
-                        • JSON: {"component_id":"CLP001","type":"clipper","location":"Section A"}                            <table class="data-table">
-
-                    </div>                                <tbody id="qrDetailsTableBody"></tbody>
-
-                </div>                            </table>
-
-                        </div>
-
-                <!-- QR Upload Section -->                    </div>
-
-                <div class="qr-upload-section">                </div>
-
-                    <div class="card-title">            </section>
-
-                        <div class="card-icon scan-icon">            <script>
-
-                            <i class="fas fa-upload"></i>            let html5QrCodeInstance = null;
-
-                        </div>            function startLiveScan() {
-
-                        Upload QR Code Image                if (html5QrCodeInstance) return;
-
-                    </div>                html5QrCodeInstance = new Html5Qrcode("qr-reader");
-
-                    <div class="upload-area" id="uploadArea">                html5QrCodeInstance.start(
-
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #667eea; margin-bottom: 10px;"></i>                    { facingMode: "environment" },
-
-                        <p>Drag and drop a QR code image here, or click to select</p>                    {
-
-                        <button type="button" class="upload-button" onclick="document.getElementById('qrUpload').click()">                        fps: 10,
-
-                            <i class="fas fa-folder-open"></i> Choose Image                        qrbox: 250
-
-                        </button>                    },
-
-                        <input type="file" id="qrUpload" class="upload-input" accept="image/*" />                    qrCodeMessage => {
-
-                    </div>                        document.getElementById('qrResultText').textContent = qrCodeMessage;
-
-                    <div id="uploadResult" class="qr-result-display">Upload a QR code image to see component details...</div>                    },
-
-                    <div id="uploadComponentPreview"></div>                    errorMessage => {
-
-                </div>                        // Optionally show scan errors
-
-                    }
-
-                <div class="dashboard-grid">                ).catch(err => {
-
-                    <div class="dashboard-card">                    document.getElementById('qrResultText').textContent = 'Camera access denied or not available.';
-
-                        <div class="card-header">                });
-
-                            <div class="card-title">            }
-
-                                <div class="card-icon scan-icon">            function stopLiveScan() {
-
-                                    <i class="fas fa-camera"></i>                if (html5QrCodeInstance) {
-
-                                </div>                    html5QrCodeInstance.stop().then(() => {
-
-                                Live Camera Scanner                        html5QrCodeInstance.clear();
-
-                            </div>                        html5QrCodeInstance = null;
-
-                        </div>                    });
-
-                        <div class="qr-scanner">                }
-
-                            <p style="margin-bottom: 20px; color: #666;">Position the QR code within the scanner area</p>            }
-
-                            <div id="qr-reader"></div>            </script>
-
-                            <div id="scan-result" class="scan-result">        </div>
-
-                                <h4>Scan Result:</h4>    </div>
-
-                                <p id="scan-text"></p></body>
-
-                            </div></html>
-                            <button id="start-scan" class="btn btn-primary" style="margin-top: 15px;">
-                                <i class="fas fa-camera"></i> Start Scanner
-                            </button>
-                            <button id="stop-scan" class="btn btn-secondary hidden" style="margin-top: 15px;">
-                                <i class="fas fa-stop"></i> Stop Scanner
-                            </button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('qrImageInput').click()"><i class="fas fa-upload"></i> Upload QR Image</button>
+                        <button class="btn btn-danger" onclick="stopLiveScan()"><i class="fas fa-stop"></i> Stop Scan</button>
+                    </div>
+                    <div id="qr-reader" style="width: 350px; margin: 20px auto;"></div>
+                    <div id="qr-canvas-container" style="display:none;">
+                        <canvas id="qr-canvas" width="350" height="350"></canvas>
+                    </div>
+                    <div class="qr-result">
+                        <h3>Scan Result</h3>
+                        <pre id="qrResultText">No QR code scanned yet.</pre>
+                        <div id="qrDetails" class="hidden">
+                            <h4>QR Details</h4>
+                            <table class="data-table">
+                                <tbody id="qrDetailsTableBody"></tbody>
+                            </table>
                         </div>
                     </div>
-
-                    <!-- Component Details Card -->
-                    <div class="dashboard-card" id="component-details" style="display: none;">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <div class="card-icon udm-icon">
-                                    <i class="fas fa-info-circle"></i>
-                                </div>
-                                Component Details
-                            </div>
-                        </div>
-                        <div id="component-info">
-                            <!-- Component details will be populated here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- UDM Details Section -->
-                <div class="dashboard-card" id="udm-details" style="display: none;">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon udm-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            UDM Details
-                        </div>
-                    </div>
-                    <div class="dashboard-grid">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-number" id="udm-asset-id">-</div>
-                                <div class="stat-label">Asset ID</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="udm-status">-</div>
-                                <div class="stat-label">Status</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="udm-condition">-</div>
-                                <div class="stat-label">Condition</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="udm-last-maintenance">-</div>
-                                <div class="stat-label">Last Maintenance</div>
-                            </div>
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Property</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="udm-properties">
-                            <!-- UDM properties will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- TMS Details Section -->
-                <div class="dashboard-card" id="tms-details" style="display: none;">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon tms-icon">
-                                <i class="fas fa-route"></i>
-                            </div>
-                            TMS Details
-                        </div>
-                    </div>
-                    <div class="dashboard-grid">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-number" id="tms-track-id">-</div>
-                                <div class="stat-label">Track ID</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="tms-km-post">-</div>
-                                <div class="stat-label">KM Post</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="tms-section">-</div>
-                                <div class="stat-label">Section</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="tms-inventory-count">-</div>
-                                <div class="stat-label">Inventory Count</div>
-                            </div>
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Property</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tms-properties">
-                            <!-- TMS properties will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Recent Scans -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon stats-icon">
-                                <i class="fas fa-history"></i>
-                            </div>
-                            Recent Scans
-                        </div>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Component ID</th>
-                                <th>Type</th>
-                                <th>Location</th>
-                                <th>Scan Time</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="scanHistory">
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: #666;">No recent scans</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </section>
-        </div>
-    </div>
-
-    <script src="main.js"></script>
-    <script>
-    let html5QrCodeInstance = null;
-    const startScanBtn = document.getElementById('start-scan');
-    const stopScanBtn = document.getElementById('stop-scan');
-    const scanText = document.getElementById('scan-text');
-    const qrReader = document.getElementById('qr-reader');
-
-    if (startScanBtn && stopScanBtn && qrReader) {
-        startScanBtn.addEventListener('click', function() {
-            startScanBtn.classList.add('hidden');
-            stopScanBtn.classList.remove('hidden');
-            scanText.textContent = 'Scanning...';
-            if (!html5QrCodeInstance) {
-                html5QrCodeInstance = new Html5Qrcode('qr-reader');
-            }
-            html5QrCodeInstance.start(
-                { facingMode: 'environment' },
-                { fps: 10, qrbox: 250 },
-                qrCodeMessage => {
-                    scanText.textContent = qrCodeMessage;
-                    // Process scan result and show component details
-                    processQRScanResult(qrCodeMessage);
-                },
-                errorMessage => {
-                    // Optionally show scan errors
-                }
-            ).catch(err => {
-                scanText.textContent = 'Camera access denied or not available.';
-            });
-        });
-
-        stopScanBtn.addEventListener('click', function() {
-            stopScanBtn.classList.add('hidden');
-            startScanBtn.classList.remove('hidden');
-            if (html5QrCodeInstance) {
-                html5QrCodeInstance.stop().then(() => {
-                    html5QrCodeInstance.clear();
-                    html5QrCodeInstance = null;
-                    scanText.textContent = 'Scan stopped.';
+            <script>
+            let html5QrCodeInstance = null;
+            function startLiveScan() {
+                if (html5QrCodeInstance) return;
+                html5QrCodeInstance = new Html5Qrcode("qr-reader");
+                html5QrCodeInstance.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    qrCodeMessage => {
+                        document.getElementById('qrResultText').textContent = qrCodeMessage;
+                    },
+                    errorMessage => {
+                        // Optionally show scan errors
+                    }
+                ).catch(err => {
+                    document.getElementById('qrResultText').textContent = 'Camera access denied or not available.';
                 });
             }
-        });
-    }
-
-    // Process QR scan result
-    function processQRScanResult(qrData) {
-        // Show component details based on scan result
-        const componentDetails = document.getElementById('component-details');
-        const udmDetails = document.getElementById('udm-details');
-        const tmsDetails = document.getElementById('tms-details');
-        
-        componentDetails.style.display = 'block';
-        udmDetails.style.display = 'block';
-        tmsDetails.style.display = 'block';
-
-        // Populate sample data
-        document.getElementById('udm-asset-id').textContent = 'AST-' + Math.floor(Math.random() * 1000);
-        document.getElementById('udm-status').textContent = 'Active';
-        document.getElementById('udm-condition').textContent = 'Good';
-        document.getElementById('udm-last-maintenance').textContent = '2024-12-15';
-
-        document.getElementById('tms-track-id').textContent = 'TRK-' + Math.floor(Math.random() * 100);
-        document.getElementById('tms-km-post').textContent = 'KM ' + Math.floor(Math.random() * 50);
-        document.getElementById('tms-section').textContent = 'Section A';
-        document.getElementById('tms-inventory-count').textContent = Math.floor(Math.random() * 100);
-
-        // Add to scan history
-        addToScanHistory(qrData);
-    }
-
-    // Add scan to history
-    function addToScanHistory(qrData) {
-        const scanHistory = document.getElementById('scanHistory');
-        const currentTime = new Date().toLocaleString();
-        
-        // Create new row
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>${qrData.substring(0, 15)}...</td>
-            <td>Clipper</td>
-            <td>Section A</td>
-            <td>${currentTime}</td>
-            <td><span class="status-badge status-active">Active</span></td>
-            <td>
-                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </td>
-        `;
-        
-        // Remove "No recent scans" message if it exists
-        if (scanHistory.rows.length === 1 && scanHistory.rows[0].cells[0].colSpan === 6) {
-            scanHistory.innerHTML = '';
-        }
-        
-        // Add new row at the top
-        scanHistory.insertBefore(newRow, scanHistory.firstChild);
-    }
-
-    // File upload functionality
-    const qrUpload = document.getElementById('qrUpload');
-    const uploadArea = document.getElementById('uploadArea');
-    const uploadResult = document.getElementById('uploadResult');
-
-    if (qrUpload) {
-        qrUpload.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                uploadResult.innerHTML = 'Processing uploaded QR code...';
-                // Here you would typically process the uploaded image
-                setTimeout(() => {
-                    uploadResult.innerHTML = 'QR Code processed successfully! Component details loaded.';
-                    processQRScanResult('UPLOADED-QR-CODE-' + Date.now());
-                }, 1000);
+            function stopLiveScan() {
+                if (html5QrCodeInstance) {
+                    html5QrCodeInstance.stop().then(() => {
+                        html5QrCodeInstance.clear();
+                        html5QrCodeInstance = null;
+                    });
+                }
             }
-        });
-
-        // Drag and drop functionality
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#f0f0f0';
-        });
-
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '';
-        });
-
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '';
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                qrUpload.files = files;
-                qrUpload.dispatchEvent(new Event('change'));
-            }
-        });
-    }
-    </script>
+            </script>
+        </div>
+    </div>
 </body>
 </html>
